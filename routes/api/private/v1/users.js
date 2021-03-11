@@ -64,7 +64,7 @@ router.post("/",
 			return res.sendResult(null,400,"密码不能为空");
 		}
 		if(!req.body.rid) {
-			req.body.rid = -1;
+			req.body.rid = 0;
 			//return res.sendResult(null,200,"角色ID不能为空");
 		}
 		if(isNaN(parseInt(req.body.rid))) req.body.rid = -1;//return res.sendResult(null,200,"角色ID必须是数字");
