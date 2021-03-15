@@ -581,9 +581,9 @@ module.exports.updateGood = function(id,params,cb) {
 	
 	params.goods_id = id;
 	// 验证参数 & 生成数据
-	generateGoodInfo(params)
+	// generateGoodInfo(params)//更新商品不需要
 	// 检查商品名称
-	.then(checkGoodName)
+	checkGoodName(params)
 	// 创建商品
 	.then(updateGoodInfo)
 	// 更新商品图片
