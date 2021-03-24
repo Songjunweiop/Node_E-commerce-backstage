@@ -528,6 +528,7 @@ module.exports.deleteGood = function(id,cb) {
  * @param  {Function} cb         回调函数
  */
 module.exports.getAllGoods = function(params,cb) {
+	console.log('aaaaaaaaaaaaaaaaa')
 	var conditions = {};
 	if(!params.pagenum || params.pagenum <= 0) return cb("pagenum 参数错误");
 	if(!params.pagesize || params.pagesize <= 0) return cb("pagesize 参数错误"); 
