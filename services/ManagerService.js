@@ -84,7 +84,7 @@ module.exports.createManager = function(params,cb) {
 			"mg_mobile":params.mobile,
 			"mg_email":params.email,
 			"mg_time":(Date.parse(new Date())/1000),
-			"role_id":37
+			"role_id":params.rid
 		},function(err,manager){
 			if(err) return cb("创建失败");
 			result = {
