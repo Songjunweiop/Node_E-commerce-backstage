@@ -78,7 +78,7 @@ authorization.setAuthFn(function(req, res, next, serviceName, actionName, passFn
  *
  */
 // 带路径的用法并且可以打印出路有表
-// mount(app, path.join(process.cwd(), '/routes'), true)
+mount(app, path.join(process.cwd(), '/routes'), false)
 
 app.all('/ueditor/ue', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')

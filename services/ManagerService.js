@@ -42,7 +42,7 @@ module.exports.getAllManagers = function(conditions,cb) {
 				var manager = managers[idx];
 				var role_name = manager.role_name;
 				if(!manager.role_id) {
-					role_name = "超级管理员"
+					role_name = "待分配"
 				}
 				retManagers.push({
 					"id": manager.mg_id,
@@ -84,7 +84,7 @@ module.exports.createManager = function(params,cb) {
 			"mg_mobile":params.mobile,
 			"mg_email":params.email,
 			"mg_time":(Date.parse(new Date())/1000),
-			"role_id":params.rid
+			"role_id":37
 		},function(err,manager){
 			if(err) return cb("创建失败");
 			result = {
