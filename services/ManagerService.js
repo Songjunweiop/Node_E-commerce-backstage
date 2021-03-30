@@ -42,7 +42,7 @@ module.exports.getAllManagers = function(conditions,cb) {
 				var manager = managers[idx];
 				var role_name = manager.role_name;
 				if(!manager.role_id) {
-					role_name = "待分配"
+					role_name = "admin"
 				}
 				retManagers.push({
 					"id": manager.mg_id,

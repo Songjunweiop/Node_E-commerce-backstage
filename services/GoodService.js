@@ -52,6 +52,8 @@ function clipImage(srcPath,savePath,newWidth,newHeight) {
  */
 function generateGoodInfo(params) {
 	return new Promise(function(resolve,reject){
+
+		console.log(params)
 		var info = {};
 		if(params.goods_id) info["goods_id"] = params.goods_id;
 		if(!params.goods_name) return reject("商品名称不能为空");
@@ -96,7 +98,7 @@ function generateGoodInfo(params) {
 		if(params.goods_big_logo) {
 			info["goods_big_logo"] = params.goods_big_logo;
 		} else {
-			info["goods_big_logo"] = "";
+			info["goods_big_logo"] = params.pics[0].pic;
 		}
 
 		if(params.goods_small_logo) {
@@ -554,7 +556,7 @@ module.exports.getAllGoods = function(params,cb) {
 		// 构建条件
 		conditions["offset"] = offset;
 		conditions["limit"] = limit;
-		conditions["only"] = ["goods_id","goods_name","goods_price","goods_weight","goods_state","add_time","goods_number","upd_time","hot_mumber","is_promote"];
+		conditions["only"] = ["goods_id","goods_name","goods_price","goods_big_logo","goods_weight","goods_state","add_time","goods_number","upd_time","hot_mumber","is_promote"];
 		conditions["order"] = "-add_time";
 
 
@@ -564,7 +566,7 @@ module.exports.getAllGoods = function(params,cb) {
 			resultDta["total"] = count;
 			resultDta["pagenum"] = pagenum;
 			resultDta["goods"] = _.map(goods,function(good){
-				return _.omit(good,"goods_introduce","is_del","goods_big_logo","goods_small_logo","delete_time");
+				return _.omit(good,"is_del","goods_small_logo","delete_time");
 			});
 			cb(err,resultDta);
 		})
