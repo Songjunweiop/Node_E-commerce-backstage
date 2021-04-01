@@ -28,7 +28,7 @@ module.exports.getLeftMenus = function(userInfo,cb) {
 					if(rid != 0) {
 						if(!keyRolePermissions[permission.ps_id]) continue;;
 					}
-					console.log(permission)
+					// console.log(permission)
 					rootPermissionsResult[permission.ps_id] = {
 						"id":permission.ps_id,
 						"authName":permission.ps_name,

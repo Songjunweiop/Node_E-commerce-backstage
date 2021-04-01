@@ -53,7 +53,7 @@ function clipImage(srcPath,savePath,newWidth,newHeight) {
 function generateGoodInfo(params) {
 	return new Promise(function(resolve,reject){
 
-		console.log(params)
+		// console.log(params)
 		var info = {};
 		if(params.goods_id) info["goods_id"] = params.goods_id;
 		if(!params.goods_name) return reject("商品名称不能为空");
