@@ -111,3 +111,33 @@ module.exports.updateVip = function(params,cb) {
 		}
 	)
 }
+
+
+module.exports.login = function(username,password,cb) {
+	logger.debug('login => username:%s,password:%s',username,password);
+	logger.debug(username);
+	vipDAO.findOne({"username":username},function(err,vip) {
+		logger.debug(err);	
+		if(err || !vip) return cb("用户名不存在");
+
+		if(Password.verify(password, vip.password)){
+			cb(
+				null,
+				{
+					"id": vip.user_id,
+					"username":vip.username,
+					"create_time":vip.create_time,
+					"mobile":vip.user_tel,
+					"email":vip.user_email,
+					"sex":vip.user_sex,
+					"status":vip.is_active,
+					"qq":vip.user_qq,
+					"xueli":vip.user_xueli,
+					"hobby":vip.user_hobby,
+				}
+			);
+		} else {
+			return cb("密码错误");
+		}
+	});
+}

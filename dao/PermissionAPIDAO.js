@@ -27,12 +27,18 @@ module.exports.list = function(cb) {
 module.exports.authRight = function(rid,serviceName,actionName,cb) {
 	
 	// 超级管理员
+	console.log(rid)
 	if(rid == 0) return cb(null,true);
 
 	// 权限验证
 	daoModule.findOne("PermissionAPIModel",{"ps_api_service":serviceName,"ps_api_action":actionName},function(err,permissionAPI){
 		console.log("rid => %s,serviceName => %s,actionName => %s",rid,serviceName,actionName);
-		if(err || !permissionAPI) return cb("无权限访问",false);
+		// if(err || !permissionAPI) return cb("无权限访问",false);
+		if(serviceName === 'VipService') {
+			return cb(null, true)
+		}else if(err || !permissionAPI){
+			return cb("无权限访问",false);
+		}
 		
 		daoModule.findOne("RoleModel",{"role_id":rid},function(err,role){
 			console.log(role);

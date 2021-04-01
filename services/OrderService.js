@@ -2,6 +2,7 @@ var _ = require('lodash');
 var path = require("path");
 var orm = require("orm");
 var dao = require(path.join(process.cwd(),"dao/DAO"));
+var orderDAO = require(path.join(process.cwd(),"dao/OrderDAO"));
 
 var Promise = require("bluebird");
 var uniqid = require('uniqid');
@@ -18,7 +19,7 @@ function doCheckOrderParams(params) {
 		}
 		
 
-		if(!params.order_id) info.order_number = "itcast-" + uniqid();
+		if(!params.order_id) info.order_number = "wesley-" + Date.parse(new Date())/1000;
 
 		if(!params.order_price) return reject("订单价格不能为空");
 		if(isNaN(parseFloat(params.order_price))) return reject("订单价格必须为数字");
@@ -78,7 +79,8 @@ function doCheckOrderParams(params) {
 		}
 
 		info.pay_status = '0';
-		if(params.order_id) info.create_time = (Date.parse(new Date())/1000);
+		info.create_time = Date.parse(new Date())/1000;
+		console.log(info.create_time)
 		info.update_time = (Date.parse(new Date())/1000);
 
 		resolve(info);
@@ -88,7 +90,8 @@ function doCheckOrderParams(params) {
 function doCreateOrder(info) {
 	return new Promise(function(resolve,reject) {
 		dao.create("OrderModel",_.clone(info),function(err,newOrder){
-			if(err) return reject("创建订单失败");
+			if(err) return reject(err);
+			console.log('ssdfsadfasdfsadf')
 			info.order = newOrder;
 			resolve(info);
 		});
@@ -262,7 +265,7 @@ module.exports.getAllOrders = function(params,cb){
 
 module.exports.getOrder = function(orderId,cb) {
 	if(!orderId) return cb("用户ID不能为空");
-	if(isNaN(parseInt(orderId))) return cb("用户ID必须是数字");
+	if(isNaN(parseInt(orderId))) return cb("dddddddddddd");
 	
 	doGetOrder({"order_id":orderId})
 	.then(doGetAllOrderGoods)
@@ -289,4 +292,53 @@ module.exports.updateOrder = function(orderId,params,cb) {
 		cb(err);
 	});
 	
+}
+
+module.exports.getOrderbyId = function(conditions,cb) {
+	console.log(conditions)
+
+	
+	if(!conditions.pagenum) return cb("pagenum 参数不合法");
+	if(!conditions.pagesize) return cb("pagesize 参数不合法");
+
+
+	// 通过关键词获取管理员数量
+	orderDAO.countByKey(conditions.query,function(err,count) {
+		key = conditions.query;
+		console.log(key)
+		pagenum = parseInt(conditions["pagenum"]);
+		pagesize = parseInt(conditions["pagesize"]);
+
+		pageCount = Math.ceil(count / pagesize);
+		offset = (pagenum - 1) * pagesize;
+		if(offset >= count) {
+			offset = count;
+		}
+		limit = pagesize;
+
+		orderDAO.findByKey(key,offset,limit,function(err,orders){
+			var retOrder = [];
+			for(idx in orders) {
+				var order = orders[idx];
+				// var role_name = order.role_name;
+				if(!order.role_id) {
+					role_name = "admin"
+				}
+				retOrder.push({
+					"order_id": order.order_id,
+					// "role_name":role_name,
+					"user_id": order.user_id,
+					"order_number":order.order_name,
+					"create_time":order.create_time,
+					"order_price":order.order_price,
+				});
+			}
+			var resultDta = {};
+			resultDta["total"] = count;
+			resultDta["pagenum"] = pagenum;
+			resultDta["orders"] = retOrder;
+			cb(err,resultDta);
+		});
+
+	});
 }

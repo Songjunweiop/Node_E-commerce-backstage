@@ -16,6 +16,7 @@ module.exports = function(db,callback){
 		user_introduce : Number,
 		create_time : Number,
 		update_time : Number,
+		role_id: Number
 	},{
 		table : "sp_user"
 	});

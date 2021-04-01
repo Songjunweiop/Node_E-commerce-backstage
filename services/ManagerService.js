@@ -1,5 +1,7 @@
 var path = require("path");
 var managersDAO = require(path.join(process.cwd(),"dao/ManagerDAO"));
+var vipDAO = require(path.join(process.cwd(),"dao/VipDAO"));
+
 var Password = require("node-php-password");
 var logger = require('../modules/logger').logger();
 
@@ -213,32 +215,64 @@ module.exports.updateMgrState = function(id,state,cb) {
  * @param  {Function} cb       回调
  */
 module.exports.login = function(username,password,cb) {
-	logger.debug('login => username:%s,password:%s',username,password);
-	logger.debug(username);
-	managersDAO.findOne({"mg_name":username},function(err,manager) {
-		logger.debug(err);	
-		if(err || !manager) return cb("用户名不存在");
-		if(manager.role_id < 0) {
-			return cb("该用户没有权限登录");
-		}
+	if(username !== '小蜜蜂' && username !== 'qqq'){
+	// if(true){
+		logger.debug('login => username:%s,password:%s',username,password);
+		logger.debug(username);
+		managersDAO.findOne({"mg_name":username},function(err,manager) {
+			logger.debug(err);	
+			if(err || !manager) return cb("用户名不存在");
+			if(manager.role_id < 0) {
+				return cb("该用户没有权限登录");
+			}
 
-		if(manager.role_id != 0 && manager.mg_state != 1) {
-			return cb("该用户已经被禁用");
-		}
+			if(manager.role_id != 0 && manager.mg_state != 1) {
+				return cb("该用户已经被禁用");
+			}
 
-		if(Password.verify(password, manager.mg_pwd)){
-			cb(
-				null,
-				{
-					"id":manager.mg_id,
-					"rid":manager.role_id,
-					"username":manager.mg_name,
-					"mobile":manager.mg_mobile,
-					"email":manager.mg_email,
+			if(Password.verify(password, manager.mg_pwd)){
+				cb(
+					null,
+					{
+						"id":manager.mg_id,
+						"rid":manager.role_id,
+						"username":manager.mg_name,
+						"mobile":manager.mg_mobile,
+						"email":manager.mg_email,
+					}
+				);
+			} else {
+				return cb("密码错误");
+			}
+		});
+	}else {
+			logger.debug('login => username:%s,password:%s',username,password);
+			logger.debug(username);
+			vipDAO.findOne({"username":username},function(err,vip) {
+				logger.debug(err);	
+				if(err || !vip) return cb("用户名不存在");
+		
+				if(Password.verify(password, vip.password)){
+					cb(
+						null,
+						{
+							"id": vip.user_id,
+							"role_id": vip.role_id,
+							"username":vip.username,
+							"create_time":vip.create_time,
+							"mobile":vip.user_tel,
+							"email":vip.user_email,
+							"sex":vip.user_sex,
+							"status":vip.is_active,
+							"qq":vip.user_qq,
+							"xueli":vip.user_xueli,
+							"hobby":vip.user_hobby,
+						}
+					);
+				} else {
+					return cb("密码错误");
 				}
-			);
-		} else {
-			return cb("密码错误");
-		}
-	});
+			});
+		
+	}
 }

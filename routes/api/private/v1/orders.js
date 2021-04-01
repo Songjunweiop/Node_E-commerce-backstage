@@ -89,12 +89,39 @@ router.put("/:id",
 	}
 );
 
-router.get("/:id",function(req,res,next){
-	orderServ.getOrder(req.params.id,function(err,result){
-		if(err) return res.sendResult(null,400,err);
-		return res.sendResult(result,200,"获取成功");
-	})(req,res,next);
-});
+// router.get("/:id",function(req,res,next){
+// 	orderServ.getOrder(req.params.id,function(err,result){
+// 		if(err) return res.sendResult(null,400,err);
+// 		return res.sendResult(result,200,"获取成功");
+// 	})(req,res,next);
+// });
+
+router.get("/found/",
+	// 验证参数
+	function(req,res,next) {
+		console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+		// 参数验证
+		if(!req.query.pagenum || req.query.pagenum <= 0) return res.sendResult(null,400,"pagenum 参数错误");
+		if(!req.query.pagesize || req.query.pagesize <= 0) return res.sendResult(null,400,"pagesize 参数错误"); 
+		next();
+	},
+	// 处理业务逻辑
+	function(req,res,next) {
+		console.log('走这里了？')
+		orderServ.getOrderbyId(
+			{
+				"query":req.query.query,
+				"pagenum":req.query.pagenum,
+				"pagesize":req.query.pagesize
+			},
+			function(err,result){
+				if(err) return res.sendResult(null,400,err);
+				res.sendResult(result,200,"获取管理员列表成功");
+			}
+		)(req,res,next);
+		
+	}
+);
 
 
 
