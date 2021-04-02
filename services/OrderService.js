@@ -41,7 +41,7 @@ function doCheckOrderParams(params) {
 		}
 
 		if(params.trade_no) {
-			info.trade_no = '否';
+			info.trade_no = params.trade_no;
 		} else {
 			info.trade_no = '';
 		}
@@ -71,7 +71,7 @@ function doCheckOrderParams(params) {
 		if(params.consignee_addr) {
 			info.consignee_addr = params.consignee_addr;
 		} else {
-			info.consignee_addr = "";
+			info.consignee_addr = "默认配送地址";
 		}
 
 		if(params.goods) {
@@ -326,11 +326,18 @@ module.exports.getOrderbyId = function(conditions,cb) {
 				}
 				retOrder.push({
 					"order_id": order.order_id,
-					// "role_name":role_name,
 					"user_id": order.user_id,
 					"order_number":order.order_name,
 					"create_time":order.create_time,
 					"order_price":order.order_price,
+					"order_pay": order.order_pay,
+					"is_send" : order.is_send,
+					"order_fapiao_title" : order.order_fapiao_title,
+					"order_fapiao_company" : order.order_fapiao_company,
+					"order_fapiao_content" : order.order_fapiao_content,
+					"consignee_addr" : order.consignee_addr,
+					"pay_status" : order.pay_status,
+					"trade_no": order.trade_no
 				});
 			}
 			var resultDta = {};

@@ -5,7 +5,7 @@ module.exports = function(db,callback){
 		user_id : Number,
 		order_number : String,
 		order_price : Number,
-		order_pay : [1,2,3],
+		order_pay : [0,1,2,3],
 		is_send : ["是","否"],
 		trade_no : String,
 		order_fapiao_title : ["个人","公司"],
