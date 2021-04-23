@@ -46,3 +46,10 @@ module.exports.findByKey = function(key,offset,limit,cb) {
 		});
 	}
 }
+
+module.exports.destroy = function(id,cb) {
+	daoModule.destroy("OrderModel",id,function(err){
+		if(err) return cb(err);
+		return cb(null);
+	});
+}

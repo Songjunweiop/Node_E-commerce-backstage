@@ -23,6 +23,9 @@ router.get("/",
 			"pagenum" : req.query.pagenum,
 			"pagesize" : req.query.pagesize
 		};
+		if(req.query.query) {
+			conditions["query"] = req.query.query;
+		}
 
 		if(req.query.user_id) {
 			conditions["user_id"] = req.query.user_id;
@@ -55,6 +58,57 @@ router.get("/",
 		)(req,res,next);
 	}
 );
+
+router.get("/goodsname/",
+	// 参数验证
+	function(req,res,next) {
+		// 参数验证
+		if(!req.query.pagenum || req.query.pagenum <= 0) return res.sendResult(null,400,"pagenum 参数错误");
+		if(!req.query.pagesize || req.query.pagesize <= 0) return res.sendResult(null,400,"pagesize 参数错误"); 
+		next();
+	},
+	// 业务逻辑
+	function(req,res,next) {
+		var conditions = {
+			"pagenum" : req.query.pagenum,
+			"pagesize" : req.query.pagesize
+		};
+		if(req.query.query) {
+			conditions["query"] = req.query.query;
+		}
+
+		if(req.query.user_id) {
+			conditions["user_id"] = req.query.user_id;
+		}
+		if(req.query.pay_status) {
+			conditions["pay_status"] = req.query.pay_status;
+		}
+		if(req.query.is_send) {
+			conditions["is_send"] = req.query.is_send;
+		}
+		if(req.query.order_fapiao_title) {
+			conditions["order_fapiao_title"] = req.query.order_fapiao_title;
+		}
+		if(req.query.order_fapiao_company) {
+			conditions["order_fapiao_company"] = req.query.order_fapiao_company;
+		}
+		if(req.query.order_fapiao_content) {
+			conditions["order_fapiao_content"] = req.query.order_fapiao_content;
+		}
+		if(req.query.consignee_addr) {
+			conditions["consignee_addr"] = req.query.consignee_addr;
+		}
+
+		orderServ.getAllOrders(
+			conditions,
+			function(err,result){
+				if(err) return res.sendResult(null,400,err);
+				res.sendResult(result,200,"获取成功");
+			}
+		)(req,res,next);
+	}
+);
+
 
 // 添加订单
 router.post("/",
@@ -118,6 +172,24 @@ router.get("/found/",
 			}
 		)(req,res,next);
 		
+	}
+);
+
+
+
+router.delete("/:id",
+	// 验证参数
+	function(req,res,next){
+		if(!req.params.id) return res.sendResult(null,400,"用户ID不能为空");
+		if(isNaN(parseInt(req.params.id))) return res.sendResult(null,400,"ID必须是数字");
+		next();
+	},
+	// 处理业务逻辑
+	function(req,res,next){
+		orderServ.deleteOrder(req.params.id,function(err){
+			if(err) return res.sendResult(null,400,err);
+			return res.sendResult(null,200,"删除成功");
+		})(req,res,next);
 	}
 );
 

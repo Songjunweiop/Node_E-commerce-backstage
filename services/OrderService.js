@@ -196,6 +196,9 @@ module.exports.getAllOrders = function(params,cb){
 	if(!params.pagenum || params.pagenum <= 0) return cb("pagenum 参数错误");
 	if(!params.pagesize || params.pagesize <= 0) return cb("pagesize 参数错误"); 
 	conditions["columns"] = {};
+	if(params.query) {
+		conditions["columns"]["is_send"] = orm.like("%" + params.query + "%");
+	}
 	if(params.user_id) {
 		conditions["columns"]["user_id"] = params.user_id;
 	}
@@ -255,7 +258,7 @@ module.exports.getAllOrders = function(params,cb){
 			var resultDta = {};
 			resultDta["total"] = count;
 			resultDta["pagenum"] = pagenum;
-			resultDta["goods"] = _.map(orders,function(order){
+			resultDta["order"] = _.map(orders,function(order){
 				return order;//_.omit(order,);
 			});
 			cb(err,resultDta);
@@ -347,5 +350,13 @@ module.exports.getOrderbyId = function(conditions,cb) {
 			cb(err,resultDta);
 		});
 
+	});
+}
+
+
+module.exports.deleteOrder = function(id,cb) {
+	orderDAO.destroy(id,function(err){
+		if(err) return cb("删除失败");
+		cb(null);
 	});
 }
