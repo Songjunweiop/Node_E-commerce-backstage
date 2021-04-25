@@ -6,7 +6,7 @@ module.exports = function(db,callback){
     qq_open_id: String,
 		password : String,
 		user_email : String,
-		user_email_code : Number,
+		// user_email_code : Number,
 		is_active : ['是','否'],
 		user_sex : ['男','女'],
 		user_qq : String,

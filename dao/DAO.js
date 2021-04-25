@@ -12,6 +12,7 @@ var logger = require('../modules/logger').logger();
  * @param  {Function} cb        回调函数
  */
 module.exports.create = function(modelName,obj,cb) {
+	console.log(modelName)
 	var db = databaseModule.getDatabase();
 	var Model = db.models[modelName];
 	Model.create(obj,cb);

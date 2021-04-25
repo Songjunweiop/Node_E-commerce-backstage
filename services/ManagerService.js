@@ -215,7 +215,7 @@ module.exports.updateMgrState = function(id,state,cb) {
  * @param  {Function} cb       回调
  */
 module.exports.login = function(username,password,cb) {
-	if(username !== '小蜜蜂' && username !== 'qqq'){
+	if(username !== '小蜜蜂' && username !== 'qqq' && username!== '宋俊威'){
 	// if(true){
 		logger.debug('login => username:%s,password:%s',username,password);
 		logger.debug(username);

@@ -98,6 +98,42 @@ router.put("/:id",
 	}
 );
 
-
+// 创建用户
+router.post("/",
+	// 验证参数
+	function(req,res,next) {
+		if(!req.body.username){
+			return res.sendResult(null,400,"用户名不能为空");
+		}
+		if(!req.body.password) {
+			return res.sendResult(null,400,"密码不能为空");
+		}
+		if(!req.body.rid) {
+			req.body.rid = 30;
+			//return res.sendResult(null,200,"角色ID不能为空");
+		}
+		if(isNaN(parseInt(req.body.rid))) req.body.rid = -1;//return res.sendResult(null,200,"角色ID必须是数字");
+		next();
+	},
+	// 处理业务逻辑
+	function(req,res,next) {
+		console.log(req.body)
+		params = {
+			"username":req.body.username,
+			"password":req.body.password,
+			// "create_time":req.body.create_time,
+			"mobile":req.body.user_tel,
+			"email":req.body.user_email,
+			"sex":req.body.user_sex,
+			"qq":req.body.user_qq || '',
+			"xueli":req.body.user_xueli,
+			"role_id": req.body.rid
+		}
+		vipServ.createVip(params,function(err,manager){
+			if(err) return res.sendResult(null,400,err);
+			res.sendResult(manager,201,"创建成功");
+		})(req,res,next);
+	}
+);
 
 module.exports = router;

@@ -51,7 +51,6 @@ module.exports.getAllVips = function(conditions,cb) {
 					"qq":vip.user_qq,
 					"xueli":vip.user_xueli,
 					"hobby":vip.user_hobby,
-
 				});
 			}
 			var resultDta = {};
@@ -139,5 +138,44 @@ module.exports.login = function(username,password,cb) {
 		} else {
 			return cb("密码错误");
 		}
+	});
+}
+
+module.exports.createVip = function(params,cb) {
+	// console.log(params)
+	vipDAO.exists(params.username,function(err,isExists){
+		// console.log(err)
+		if(err) return cb(err);
+
+		if(isExists) {
+			return cb("用户名已存在");
+		}
+
+		vipDAO.create({
+			"password":Password.hash(params.password),
+			"username": params.username,
+			"user_tel": params.mobile,
+			"user_email": params.email,
+			"user_sex": params.sex,
+			"user_qq": params.qq,
+			"user_xueli": params.xueli,
+			"role_id": params.role_id,
+			"create_time":(Date.parse(new Date())/1000),
+			"update_time":(Date.parse(new Date())/1000),
+		},function(err,vip){
+			if(err) return cb(err);
+			result = {
+				"id": vip.user_id,
+					"username":vip.username,
+					"create_time":vip.create_time,
+					"mobile":vip.user_tel,
+					"email":vip.user_email,
+					"sex":vip.user_sex,
+					"status":vip.is_active,
+					"qq":vip.user_qq,
+					"xueli":vip.user_xueli,
+			};
+			cb(null,result);
+		});
 	});
 }

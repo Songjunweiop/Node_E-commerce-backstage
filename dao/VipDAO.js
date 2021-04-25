@@ -9,6 +9,7 @@ databaseModule = require(path.join(process.cwd(),"modules/database"));
  * @param  {Function} cb  回调函数
  */
 module.exports.create = function(obj,cb) {
+	console.log(obj)
 	daoModule.create("VipModel",obj,cb);
 }
 
@@ -75,7 +76,7 @@ module.exports.findByKey = function(key,offset,limit,cb) {
 module.exports.exists = function(username,cb) {
 	var db = databaseModule.getDatabase();
 	var Model = db.models.VipModel;
-	Model.exists({"mg_name":username},function(err,isExists){
+	Model.exists({"username":username},function(err,isExists){
 		if(err) return cb("查询失败");
 		 cb(null,isExists);
 	});
